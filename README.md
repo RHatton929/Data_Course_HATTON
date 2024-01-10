@@ -4,4 +4,4 @@ This README file contains information about my uploaded assignments. Additional 
 
 - Try making a list
 - Attempt _italics_
-- Bold some text
+- __Bold__ some text
