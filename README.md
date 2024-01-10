@@ -5,3 +5,5 @@ This README file contains information about my uploaded assignments. Additional 
 - Try making a list
 - Attempt _italics_
 - __Bold__ some text
+
+I think that hit the required number of commits for this assignment, but a few more couldn't hurt.
