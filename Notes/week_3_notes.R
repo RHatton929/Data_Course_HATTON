@@ -101,3 +101,83 @@ abs(mean(mtcars$mpg))
 mtcars$mpg %>% 
   mean() %>% 
   abs()
+
+
+#Thursday Notes####
+
+library(tidyverse)
+library(palmerpenguins)
+
+##practice: subsetting ####
+
+penguins %>% names
+
+penguins %>% 
+  filter(bill_length_mm > 40)
+
+#use pipelines to get data
+#find mean body mass of female penguins with long bills
+
+pengs <- penguins %>% 
+  filter(bill_length_mm > 40 & sex == "female")
+
+pengs$body_mass_g %>% mean
+
+#or for same results
+
+penguins %>% 
+  filter(bill_length_mm > 40 & sex == "female") %>% 
+  pluck("body_mass_g") %>% 
+  mean
+
+##practice: piping####
+#do the same but for each species
+#group_by is followed by summarize, which lets you build your summary
+penguins %>% 
+  filter(bill_length_mm > 40 & sex == "female") %>%
+  group_by(species, island) %>% #comma to separate all grouping columns
+  summarize(mean_body_mass = mean(body_mass_g),
+            min_body_mass = min(body_mass_g),
+            max_body_mass = max(body_mass_g),
+            sd_body_mass = sd(body_mass_g),
+            N = n()) %>% #counts how many times an object appears
+  arrange(desc(mean_body_mass)) %>% 
+  write_csv("./Data/penguin_summary.csv") #write_csv is tidyverse, use this
+
+#find the fatty penguins (body_mass_g > 5000)
+#count how many are male and how many are female
+#return the max body mass for males and females
+
+penguins %>% 
+  filter(body_mass_g > 5000) %>% 
+  group_by(sex) %>% 
+  summarize(N=n(),
+            max_body_mass = max(body_mass_g))
+
+#bonus: add new column that says whether they're fatties
+#use a logic statement!
+penguins %>% 
+  mutate(fatty = body_mass_g > 5000)
+
+#or to put the text in the column
+
+x <- 
+penguins %>% 
+  mutate(fat_status = case_when(body_mass_g > 5000 ~ "fatty",
+                                body_mass_g <= 5000 ~ "skinny"))
+
+#Plot####
+#make a plot! layer with +
+x %>%
+  filter(!is.na(sex)) %>% 
+  ggplot(mapping = aes(x=body_mass_g, y=bill_length_mm, color = fat_status, shape = fat_status)) +
+  geom_point() +
+  geom_smooth() +
+  scale_color_manual(values = c('violet', 'salmon')) + #make it ugly!!
+  theme_gray()
+  #theme(axis.text = element_text(angle=180, face = 'italic')) +
+  #scale_color_viridis_d(option = 'plasma') #viridis is colorblind friendly
+
+
+#Package of the Week: ggmap####
+
