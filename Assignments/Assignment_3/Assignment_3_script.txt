@@ -22,7 +22,7 @@ iris$Sepal.Area <- iris$Sepal.Length*iris$Sepal.Width
 names(iris)
 
 # 5.  Create a new dataframe that is a subset of iris using only rows where Sepal.Area is greater than 20 
-      # (name it big_area_iris)
+# (name it big_area_iris)
 
 # Base R: big_area_iris <- iris[iris$Sepal.Area > 20,]
 # tidyverse:

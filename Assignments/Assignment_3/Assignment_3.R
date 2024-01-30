@@ -13,7 +13,7 @@
 
 # Then, make sure to upload this to both Canvas and your GitHub repository
 
-# Vector operations! ####
+## Vector operations! ####
 
 # Vectors are 1-dimensional series of values in some order
 1:10 # ':' only works for integers
@@ -42,7 +42,7 @@ letters %in% c("a","b","c","z")
 vector1 %in% 1:6
 
 
-# Data Frames ####
+## Data Frames ####
 # R has quite a few built-in data sets
 data("iris") # load it like this
 
@@ -76,14 +76,14 @@ letters[1:7]
 letters[c(1,3,5,7)]
 
 
-# Plotting ####
+## Plotting ####
 
 # Can make a quick plot....just give vectors for x and y axes
 plot(x=dat$Petal.Length, y=dat$Sepal.Length)
 plot(x=dat$Species, y=dat$Sepal.Length)
 
 
-# Object "Classes" ####
+## Object "Classes" ####
 
 #check the classes of these vectors
 class(dat$Petal.Length)
@@ -170,7 +170,7 @@ iris$Sepal.Area <- iris$Sepal.Length*iris$Sepal.Width
 names(iris)
 
 # 5.  Create a new dataframe that is a subset of iris using only rows where Sepal.Area is greater than 20 
-      # (name it big_area_iris)
+# (name it big_area_iris)
 
 # Base R: big_area_iris <- iris[iris$Sepal.Area > 20,]
 # tidyverse:
