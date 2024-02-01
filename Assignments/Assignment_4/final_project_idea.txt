@@ -1,0 +1,23 @@
+Task 1: Create a plaintext document named “final_project_idea.txt”
+
+You're here!
+
+
+Task 2: In it, describe your idea for a data analysis final project
+
+I'd like to do something fun, like plotting the most common times UFOs are reported, mapping locations of reported UFO sightings, and seeing if there's a relationship between location and the described shape of the UFO. For sightings in the US, I'd attempt to control for population size of each state to see if the ratio of reported sightings is consistent.
+
+
+Task 3: Also, Describe the sort of data you will use, potential sources, and what the data might look like
+
+I found a UFO sighting dataset on Kaggle which was pulled form the National UFO Reporting Center. It definitely needs a little bit of fine tuning, but it has about 80,000 rows and columns for datetime, city, state, country, shape, and duration in both seconds and hours/mins, as well as several columns I probably won't touch, such as comments and latitude (but no longitude). 
+
+
+Task 4: (If you already have data, skip this task) Create fake data that simulates what your final project data set might look like. Preferrably a csv file
+
+It has been skipped.
+
+
+Task 5: Generate a plot (using ggplot) using either your real or fake data that shows at least one expected result
+
+I generated a graph of UFO sightings, filtering out non-US sightings and finding totals by state.
