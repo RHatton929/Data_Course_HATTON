@@ -58,3 +58,48 @@ ggplot(penguins, mapping = aes(x = flipper_length_mm,
 
 library(ggimage)
 #geom_image(image=)
+
+
+library(tidyverse)
+library(penguins)
+
+names(penguins)
+
+peng_filtered <- penguins %>% 
+  filter(sex!=is.na(sex))
+
+ggplot(peng_filtered, mapping = aes(x = factor(year),
+                               y = bill_length_mm,
+                               color = species)) +
+  geom_boxplot() +
+  geom_jitter(height = 0, width = 0.1, alpha = 0.3) +
+  facet_wrap(~year, scale = "free") +
+  theme_bw()
+
+ggplot(peng_filtered, aes(x=flipper_length_mm,
+           fill=species)) +
+  geom_density(alpha=0.3)
+#same as a hist, really
+
+#ask: what am I trying to show/discover!
+#never hide data
+#plot data before running stats! you need to visualize before you math it
+
+#show and tell: leaflet!! Use this for final project.  
+
+#READ_DELIM for TSV files
+library(GGally)
+
+GGally::ggpairs(penguins)
+  
+peng_filtered %>% 
+  ggplot(aes(x = bill_depth_mm,
+             y = body_mass_g)) +
+  facet_wrap(~species) +
+  geom_point(aes(color=sex), size = 4, alpha = .75) +
+  scale_color_viridis_d(end=0.8)+
+  theme_bw()+
+  theme(strip.background= element_blank())
+
+library(gapminder)
+df <- gapminder
