@@ -146,13 +146,28 @@ bpdat <-
   select(-starts_with("HR"))
 
 #make that d.f tidy
+##Better Tidying 2024-02-20 ####
+
+names(bpdat) #oh no col names are ugly!
+
+n.visits <- bpdat %>% #find the number of visits, even if data gets added
+  select(starts_with("BP")) %>% 
+  length()
+
+paste0("visit", 1:n.visits) #renames the visits
+
+which(grepl("^BP", names(bpdat))) #finds all columns named BP
+
+names(bpdat)[which(grepl("^BP", names(bpdat)))] <- paste0("visit", 1:n.visits) #combine the above two
+
+names(bpdat)
+
 bpdat <- bpdat %>% 
-  pivot_longer(starts_with("BP"),
+  pivot_longer(starts_with("visit"),
                names_to = "visit",
-               values_to = "bp") %>% 
-  mutate(visit = case_when(visit == "BP...8" ~ 1,
-                           visit == "BP...10" ~ 2,
-                           visit == "BP...12" ~ 3)) %>% 
+               values_to = "bp",
+               names_prefix = "visit",
+               names_transform = as.numeric) %>% 
   separate(bp, into = c("systolic", "diastolic"))
 
 
@@ -161,14 +176,16 @@ hrdat <-
   dat %>% 
   select(-starts_with("BP"))
 
+
+names(hrdat)[which(grepl("^HR", names(hrdat)))] <- paste0("visit", 1:n.visits)
+
 #make d.f tidy
 hrdat <- hrdat %>% 
-  pivot_longer(starts_with("HR"),
+  pivot_longer(starts_with("visit"),
                names_to = "visit",
-               values_to = "hr") %>% 
-  mutate(visit = case_when(visit == "HR...9" ~ 1,
-                           visit == "HR...11" ~ 2,
-                           visit == "HR...13" ~ 3))
+               values_to = "hr",
+               names_prefix = "visit",
+               names_transform = as.numeric)
 
 ##Janitor Package####
 library(janitor)
@@ -208,3 +225,6 @@ health %>%
 
 #find new terrible data, fresh r script, practice cleaning
 #str_squish to remove whitespace in data
+
+
+"C" %>% as.roman() %>% as.numeric()
