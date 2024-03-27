@@ -1,0 +1,127 @@
+---
+title: "Hatton Assignment 9"
+output: html_document
+---
+## Grad School Admissions Data Report
+### Setup:
+```{r, message = FALSE}
+library(tidyverse)
+library(GGally)
+library(easystats)
+library(MASS)
+library(modelr)
+```
+
+### The Data:
+
+```{r, echo = FALSE, message  = FALSE}
+df <- read_csv("../../Data/GradSchool_Admissions.csv") %>% 
+  mutate(admit = as.logical(admit))
+```
+
+```{r}
+glimpse(df)
+```
+
+### Visualizing the Data:
+```{r, message = FALSE}
+ggpairs(df)
+```
+
+There seems to be a decently significant correlation between GRE and GPA, and the boxplot showing the interaction between rank and admission suggests that rank may influence grad school admission.
+
+The following violin plots help to better see relationships between some of the variables.
+This plot below shows admittance based upon gpa, faceted by rank:
+```{r plots}
+df %>% 
+  ggplot(aes(x = admit,
+             y = gpa, 
+             fill = admit)) +
+  geom_violin(alpha = 0.5) +
+  facet_wrap(~rank) +
+  theme_minimal()
+```
+
+This plot shows admittance based upon gre score, faceted by rank:
+```{r}
+df %>% 
+  ggplot(aes(x = admit,
+             y = gre, 
+             fill = admit)) +
+  geom_violin(alpha = 0.5) +
+  facet_wrap(~rank) +
+  theme_minimal()
+```
+
+### Modeling:
+
+Now, I'll define a few models with the 4 variables in the data set:
+
+```{r}
+names(df)
+```
+```{r}
+mod1 <- glm(data = df, 
+            formula = admit ~ gre + gpa,
+            family = "binomial")
+
+mod2 <- glm(data = df,
+            formula = admit ~ gre * gpa,
+            family = "binomial")
+
+mod3 <- glm(data = df, 
+            formula = admit ~ gre + gpa + rank,
+            family = "binomial")
+
+mod4 <- glm(data = df,
+            formula = admit ~ gre * gpa + rank,
+            family = "binomial")
+
+mod5 <- glm(data = df,
+            formula = admit ~ gre * gpa * rank,
+            family = "binomial")
+```
+
+While there's not a whole lot of ways to make a model with 4 total variables overly complex, I'm going to use stepwise AIC to make one final model:
+```{r, message = FALSE, results='hide'}
+step <- stepAIC(mod5)
+```
+
+I can then view the formula and assign it to my model:
+```{r}
+step$formula
+
+mod6 <- glm(data = df,
+          formula = step$formula,
+          family = "binomial")
+```
+
+Now, I'll compare the performance of the six models:
+```{r}
+comps <- compare_performance(mod1, mod2, mod3, mod4, mod5, mod6, rank = TRUE)
+
+comps
+
+comps %>% plot()
+```
+
+Mod4 and mod6 provide the same results, with a performance score of 61.76%, which is not phenomenally accurate.
+
+### Predictions:
+
+This violin plot shows the distribution of predicted probabilities of admission, which illustrates that none of the models are doing a particulary good job.
+```{r, message=FALSE}
+df %>% 
+  gather_predictions(mod1, mod2, mod3, mod4, mod5, mod6, type = "response") %>%
+  ggplot(aes(x = admit,
+             y = pred,
+             fill = admit)) +
+  geom_violin(alpha = 0.5) +
+  facet_wrap(~model) +
+  theme_minimal()
+```
+
+
+### Conclusions:
+
+There is not enough information to build a reliable model, given that the use of all variables maxed out reliability at just above 60%. The best indicator seemed to be the rank of the school one went to for their undergraduate in combination with both a higher gre score and a higher gpa.
