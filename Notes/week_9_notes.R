@@ -64,3 +64,92 @@ dat %>%
   geom_point() +
   geom_smooth()
 
+
+# show and tell
+library(pdftools)
+
+#in order to avoid adobe products
+pdftools::pdf_combine(pdf1, pdf2, pdf3, output = "~Desktop.pdf")
+
+#Day 2
+library(tidyverse)
+library(caret)
+library(broom)
+library(modelr)
+library(kableExtra)
+
+mod1 <- mpg %>% 
+  glm(data = .,
+      formula = cty ~ displ + drv)
+broom::tidy(mod1) %>% #turns summary into a data.frame
+  kableExtra::kable() %>% 
+  kableExtra::kable_classic(lightable_options = 'hover') #kable makes an interactive table
+
+add_predictions(mpg, mod1) %>% #does the predicting step and adds it for you
+  ggplot(aes(x = pred, 
+             y = cty)) +
+  geom_point()
+
+add_residuals(mpg, mod1) %>% #tells us how far off mod1 is
+  ggplot(aes(x = resid, 
+             y = cty)) +
+  geom_point()
+
+# Cross Validation: Test Model on New Data with Actual Answers####
+# Take a random subset of the data and put it aside as a testing set
+# It does not improve the model, but gives the reported value of error
+
+mpg$drv %>% table
+id <- caret::createDataPartition(mpg$cty, p = 0.8, list = FALSE)
+train <- mpg[id, ]
+test <- mpg[-id, ]
+
+
+#Train Model on training set
+
+mod2 <- glm(data = train,
+            formula = mod1$formula)
+
+#Real Test: Gives the True Value of Error
+add_predictions(test, mod2) %>% 
+  mutate(error = abs(pred - cty)) %>% 
+  pluck('error') %>% 
+  summary()
+
+#Bad Test
+add_predictions(mpg, mod1) %>% 
+  mutate(error = abs(pred - cty)) %>% 
+  pluck('error') %>% 
+  summary()
+
+iris
+library(vegan)
+iris %>% 
+  ggplot(aes(x = Sepal.Length,
+             y = Petal.Length,
+             color = Species)) +
+  geom_point() +
+  stat_ellipse()
+
+mat <- 
+  iris %>% 
+  select(Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) %>% 
+  as.matrix()
+
+#Permutational ANOVA
+
+adonis2(mat ~ iris$Species)
+
+mds <- metaMDS(mat)
+data.frame(species = iris$Species,
+           mds1 = mds$points[,1],
+           mds2 = mds$points[,2]) %>% 
+  ggplot(aes(x = mds1,
+             y = mds2,
+             color = species)) +
+  geom_point() +
+  stat_ellipse()
+
+kmeans()
+
+#look into tidy_clust for this type of thing, handles the merging step for you

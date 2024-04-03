@@ -1,0 +1,41 @@
+---
+title: "Cars Data: Kachow"
+output: html_document
+date: "2024-03-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary of Cars
+
+This is a summary of the cars dataset
+
+```{r cars, echo=FALSE}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+That's Great!
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+iris %>% 
+  ggplot(aes(x = Sepal.Length,
+             y = Sepal.Width,
+             color = Species)) +
+  geom_point()
+  
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# New level for ToC
+## Subset
